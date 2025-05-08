@@ -125,6 +125,11 @@ fn test_binary_search_tree(){
         let rootalter = BstNode::tree_delete(&rootlink2.as_ref().unwrap());
         generate_dotfile_bst(&rootalter, "bst_delete_root.dot");
     }
+
+    
+    let target_node: Option<std::rc::Rc<std::cell::RefCell<BstNode>>> = rootlink.borrow().tree_search_rc_iterative(&9);
+    let is_added: bool = rootlink.borrow().add_node(target_node.as_ref().unwrap(), 100);
+    println!("{}", is_added);
 }
 
 fn test_index(){

@@ -419,7 +419,7 @@ impl BstNode {
         }
     }
 
-    fn add_node(&self, target_node: &BstNodeLink, value: i32) -> bool {
+    pub fn add_node(&self, target_node: &BstNodeLink, value: i32) -> bool {
         let found_node: Option<BstNodeLink> =
             self.tree_search_rc_iterative(&target_node.borrow().key.unwrap());
         if let Some(found_node_rc) = found_node {
@@ -430,7 +430,7 @@ impl BstNode {
         true
     }
 
-    fn tree_predecessor(node: &BstNodeLink) -> Option<BstNodeLink> {
+    pub fn tree_predecessor(node: &BstNodeLink) -> Option<BstNodeLink> {
         let node_immutable_borrow: Ref<'_, BstNode> = node.borrow();
         if let Some(ref left_node) = node_immutable_borrow.left {
             return Some(left_node.borrow().maximum());
@@ -452,7 +452,7 @@ impl BstNode {
         return None;
     }
 
-    fn median(&self) -> BstNodeLink {
+    pub fn median(&self) -> BstNodeLink {
         fn count_nodes(node: &Option<BstNodeLink>) -> usize {
             if let Some(node_rc) = node {
                 let left_count = count_nodes(&node_rc.borrow().left);
