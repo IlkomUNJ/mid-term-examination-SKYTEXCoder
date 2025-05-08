@@ -452,9 +452,46 @@ impl BstNode {
         return None;
     }
 
-    /*fn median(&self) -> BstNodeLink {
-
-    } */
+    fn median(&self) -> BstNodeLink {
+        fn count_nodes(node: &Option<BstNodeLink>) -> usize {
+            if let Some(node_rc) = node {
+                let left_count = count_nodes(&node_rc.borrow().left);
+                let right_count = count_nodes(&node_rc.borrow().right);
+                return 1 + left_count + right_count;
+            }
+            0
+        }
+    
+        // Helper function to find the k-th smallest node in the tree
+        fn find_kth_node(node: &Option<BstNodeLink>, k: usize, count: &mut usize) -> Option<BstNodeLink> {
+            if let Some(node_rc) = node {
+                // Traverse the left subtree
+                if let Some(left_result) = find_kth_node(&node_rc.borrow().left, k, count) {
+                    return Some(left_result);
+                }
+    
+                // Visit the current node
+                *count += 1;
+                if *count == k {
+                    return Some(node_rc.clone());
+                }
+    
+                // Traverse the right subtree
+                return find_kth_node(&node_rc.borrow().right, k, count);
+            }
+            None
+        }
+    
+        // Count the total number of nodes in the tree
+        let total_nodes = count_nodes(&Some(self.get_bst_nodelink_copy()));
+    
+        // Find the median position
+        let median_position = (total_nodes + 1) / 2;
+    
+        // Find the median node
+        let mut count = 0;
+        find_kth_node(&Some(self.get_bst_nodelink_copy()), median_position, &mut count).unwrap()
+    }
 
     // assume self is the BstNode of the root node of the tree
     fn left_rotate(&mut self, x: BstNodeLink) {
@@ -492,7 +529,7 @@ impl BstNode {
         x.borrow_mut().parent = BstNode::downgrade_strong_to_weak(Some(y_rc));
     }
 
-    /*fn right_rotate(&mut self, y: BstNodeLink) {
+    /* fn right_rotate(&mut self, y: BstNodeLink) {
         let x: Option<Rc<RefCell<BstNode>>> = BstNode::clone_optional_node(&y.borrow().left);
         if x.is_none() {
             return;
