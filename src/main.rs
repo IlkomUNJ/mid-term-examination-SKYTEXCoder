@@ -125,6 +125,24 @@ fn test_binary_search_tree(){
         let rootalter = BstNode::tree_delete(&rootlink2.as_ref().unwrap());
         generate_dotfile_bst(&rootalter, "bst_delete_root.dot");
     }
+
+    // add_node test
+    let target_node: Option<std::rc::Rc<std::cell::RefCell<BstNode>>> = rootlink.borrow().tree_search_rc_iterative(&9);
+    let is_added: bool = rootlink.borrow().add_node(target_node.as_ref().unwrap(), 100);
+    println!("{}", is_added);
+
+    println!("changed target node value is: {:?}", target_node.as_ref().unwrap().borrow().key);
+
+    // predecessor test
+    let search_result = rootlink.borrow().tree_search_rc_iterative(&18);
+    let predecessor_test_node = search_result.as_ref().unwrap();
+    let predecessor = BstNode::tree_predecessor(&predecessor_test_node.clone());
+
+    println!("the predecessor value key of 18 is {:?}", predecessor.as_ref().unwrap().borrow().key);
+
+    // median test
+    let median_node: std::rc::Rc<std::cell::RefCell<BstNode>> = rootlink.borrow().median();
+    println!("the median node key value is {:?}", median_node.borrow().key);
 }
 
 fn test_index(){
